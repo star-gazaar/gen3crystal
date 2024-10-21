@@ -287,10 +287,6 @@ static void ReadKeys(void)
 
         if (JOY_HELD(L_BUTTON))
             gMain.heldKeys |= A_BUTTON;
-#ifdef BUGFIX
-        if (JOY_REPEAT(L_BUTTON))
-            gMain.newAndRepeatedKeys |= A_BUTTON;
-#endif
     }
 
     if (JOY_NEW(gMain.watchedKeysMask))
