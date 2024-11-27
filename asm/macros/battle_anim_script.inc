@@ -10,7 +10,7 @@
 	.2byte \tag
 	.endm
 
-.macro createsprite template:req, anim_battler:req, subpriority_offset:req, argv:vararg
+	.macro createsprite template:req, anim_battler:req, subpriority_offset:req, argv:vararg
 	.byte 0x02
 	.4byte \template
 	.if \anim_battler == ANIM_TARGET
@@ -282,4 +282,102 @@
 
 	.macro jumpretfalse ptr:req
 	jumpreteq FALSE, \ptr
+	.endm
+
+@ createsprite wrappers
+
+	.macro simplepaletteblend unused_anim_battler=ANIM_ATTACKER, unused_subpriority_offset=2, selector:req, delay:req, initial_blend_y:req, target_blend_y:req, color:req
+	createsprite gSimplePaletteBlendSpriteTemplate, \unused_anim_battler, \unused_subpriority_offset, \selector, \delay, \initial_blend_y, \target_blend_y, \color
+	.endm
+
+	.macro complexpaletteblend unused_anim_battler=ANIM_ATTACKER, unused_subpriority_offset=2, selector:req, delay:req, num_blends:req, color1:req, blend_y1:req, color2:req, blend_y2:req
+	createsprite gComplexPaletteBlendSpriteTemplate, \unused_anim_battler, \unused_subpriority_offset, \selector, \delay, \num_blends, \color1, \blend_y1, \color2, \blend_y2
+	.endm
+
+	.macro shakemonorterrain unused_anim_battler=ANIM_ATTACKER, unused_subpriority_offset=2, velocity:req, shake_duration:req, duration:req, type:req, battler_selector
+	.if \type == SHAKE_MON_X || \type == SHAKE_MON_Y
+	.ifb \battler_selector
+	.error "battler_selector required for SHAKE_MON_X or SHAKE_MON_Y"
+	.endif
+	.else
+	.ifnb \battler_selector
+	.warning "unused battler_selector in shakemonorterrain"
+	.endif
+	.endif
+	.ifb \battler_selector
+	createsprite gShakeMonOrTerrainSpriteTemplate, \unused_anim_battler, \unused_subpriority_offset, \velocity, \shake_duration, \duration, \type
+	.else
+	createsprite gShakeMonOrTerrainSpriteTemplate, \unused_anim_battler, \unused_subpriority_offset, \velocity, \shake_duration, \duration, \type, \battler_selector
+	.endif
+	.endm
+
+	.macro createcirclingsparklesprite anim_battler:req, subpriority_offset:req, x:req, y:req
+	createsprite sCirclingSparkleSpriteTemplate, \anim_battler, \subpriority_offset, \x, \y
+	.endm
+
+	.macro createconfusionducksprite anim_battler:req, subpriority_offset:req, x:req, y:req, wave_offset:req, wave_period:req, duration:req
+	createsprite gConfusionDuckSpriteTemplate, \anim_battler, \subpriority_offset, \x, \y, \wave_offset, \wave_period, \duration
+	.endm
+
+	.macro createbasichitsplatsprite anim_battler:req, subpriority_offset:req, x:req, y:req, relative_to:req, animation:req
+	createsprite gBasicHitSplatSpriteTemplate, \anim_battler, \subpriority_offset, \x, \y, \relative_to, \animation
+	.endm
+
+	.macro createpersisthitsplatsprite anim_battler:req, subpriority_offset:req, x:req, y:req, relative_to:req, animation:req, duration:req
+	createsprite gPersistHitSplatSpriteTemplate, \anim_battler, \subpriority_offset, \x, \y, \relative_to, \animation, \duration
+	.endm
+
+	.macro createhandleinverthitsplatsprite anim_battler:req, subpriority_offset:req, x:req, y:req, relative_to:req, animation:req
+	createsprite gHandleInvertHitSplatSpriteTemplate, \anim_battler, \subpriority_offset, \x, \y, \relative_to, \animation
+	.endm
+
+	.macro createrandomposhitsplatsprite anim_battler:req, subpriority_offset:req, relative_to:req, animation
+	.ifnb \animation
+	createsprite gRandomPosHitSplatSpriteTemplate, \anim_battler, \subpriority_offset, \relative_to, \animation
+	.else
+	createsprite gRandomPosHitSplatSpriteTemplate, \anim_battler, \subpriority_offset, \relative_to, -1
+	.endif
+	.endm
+
+	.macro createmonedgehitsplatsprite anim_battler:req, subpriority_offset:req, relative_to:req, x:req, y:req, animation:req
+	createsprite gMonEdgeHitSplatSpriteTemplate, \anim_battler, \subpriority_offset, \relative_to, \x, \y, \animation
+	.endm
+
+	.macro createcrossimpactsprite anim_battler:req, subpriority_offset:req, x:req, y:req, relative_to:req, duration:req
+	createsprite gCrossImpactSpriteTemplate, \anim_battler, \subpriority_offset, \x, \y, \relative_to, \duration
+	.endm
+
+	.macro createflashinghitsplatsprite anim_battler:req, subpriority_offset:req, x:req, y:req, relative_to:req, animation:req
+	createsprite gFlashingHitSplatSpriteTemplate, \anim_battler, \subpriority_offset, \x, \y, \relative_to, \animation
+	.endm
+
+@ createvisualtask wrappers
+
+	.macro blendcolorcycle priority=2, selector:req, delay:req, num_blends:req, initial_blend_y:req, target_blend_y:req, color:req
+	createvisualtask AnimTask_BlendColorCycle, \priority, \selector, \delay, \num_blends, \initial_blend_y, \target_blend_y, \color
+	.endm
+
+	.macro blendcolorcycleexclude priority=2, unk0:req, delay:req, num_blends:req, initial_blend_y:req, target_blend_y:req, color:req
+	createvisualtask AnimTask_BlendColorCycleExclude, \priority, \unk0, \delay, \num_blends, \initial_blend_y, \target_blend_y, \color
+	.endm
+
+	.macro blendcolorcyclebytag priority=2, tag:req, delay:req, num_blends:req, initial_blend_y:req, target_blend_y:req, color:req
+	createvisualtask AnimTask_BlendColorCycleByTag, \priority, \tag, \delay, \num_blends, \initial_blend_y, \target_blend_y, \color
+	.endm
+
+	.macro flashanimtagwithcolor priority=2, tag:req, delay:req, num_blends:req, color1:req, blend_y1:req, color2:req, blend_y2:req
+	createvisualtask AnimTask_FlashAnimTagWithColor, \priority, \tag, \delay, \num_blends, \color1, \blend_y1, \color2, \blend_y2
+	.endm
+
+	.macro invertscreencolor priority=2, scenery:req, attacker:req, target:req
+	@ NOTE: These generate 0x000 or 0x101 to match, but the code checks for '& 0x100'.
+	createvisualtask AnimTask_InvertScreenColor, \priority, (\scenery << 8) | \scenery, (\attacker << 8) | \attacker, (\target << 8) | \target
+	.endm
+
+	.macro tintpalettes priority=2, scenery:req, attacker:req, target:req, duration:req, color:req
+	createvisualtask AnimTask_TintPalettes, \priority, \scenery << 8, \attacker << 8, \target << 8, \duration, \color & 0x1F, (\color >> 5) & 0x1F, (\color >> 10) & 0x1F
+	.endm
+
+	.macro shakebattleterrain priority=2, x_offset:req, y_offset:req, shakes:req, delay:req
+	createvisualtask AnimTask_ShakeBattleTerrain, \priority, \x_offset, \y_offset, \shakes, \delay
 	.endm
