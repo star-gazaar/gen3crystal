@@ -339,6 +339,22 @@
 	createsprite gTailGlowOrbSpriteTemplate, \anim_battler, \subpriority_offset, \relative_to
 	.endm
 
+	.macro createsharpteethsprite anim_battler:req, subpriority_offset:req, x:req, y:req, animation:req, x_velocity:req, y_velocity:req, half_duration:req
+	createsprite gSharpTeethSpriteTemplate, \anim_battler, \subpriority_offset, \x, \y, \animation, \x_velocity, \y_velocity, \half_duration
+	.endm
+
+	.macro createclampjawsprite anim_battler:req, subpriority_offset:req, x:req, y:req, animation:req, x_velocity:req, y_velocity:req, half_duration:req
+	createsprite gClampJawSpriteTemplate, \anim_battler, \subpriority_offset, \x, \y, \animation, \x_velocity, \y_velocity, \half_duration
+	.endm
+
+	.macro createteardropsprite anim_battler:req, subpriority_offset:req, relative_to:req, type:req
+	createsprite gTearDropSpriteTemplate, \anim_battler, \subpriority_offset, \relative_to, \type
+	.endm
+
+	.macro createclawslashsprite anim_battler:req, subpriority_offset:req, x:req, y:req, animation:req
+	createsprite gClawSlashSpriteTemplate, \anim_battler, \subpriority_offset, \x, \y, \animation
+	.endm
+
 	.macro createcirclingsparklesprite anim_battler:req, subpriority_offset:req, x:req, y:req
 	createsprite sCirclingSparkleSpriteTemplate, \anim_battler, \subpriority_offset, \x, \y
 	.endm
@@ -381,6 +397,30 @@
 
 @ createvisualtask wrappers
 
+	.macro metallicshine priority=5, permanent:req, color
+	.ifb \color
+	createvisualtask AnimTask_MetallicShine, \priority, \permanent, FALSE, RGB_BLACK
+	.else
+	createvisualtask AnimTask_MetallicShine, \priority, \permanent, TRUE, \color
+	.endif
+	.endm
+
+	.macro setgrayscalepal priority=5, battler:req
+	createvisualtask AnimTask_SetGrayscaleOrOriginalPal, \priority, \battler, FALSE
+	.endm
+
+	.macro setoriginalpal priority=5, battler:req
+	createvisualtask AnimTask_SetGrayscaleOrOriginalPal, \priority, \battler, TRUE
+	.endm
+
+	.macro attackerfadetoinvisible priority=2, step_delay:req
+	createvisualtask AnimTask_AttackerFadeToInvisible, \priority, \step_delay
+	.endm
+
+	.macro attackerfadefrominvisible priority=2, step_delay:req
+	createvisualtask AnimTask_AttackerFadeFromInvisible, \priority, \step_delay
+	.endm
+
 	.macro blendcolorcycle priority=2, selector:req, delay:req, num_blends:req, initial_blend_y:req, target_blend_y:req, color:req
 	createvisualtask AnimTask_BlendColorCycle, \priority, \selector, \delay, \num_blends, \initial_blend_y, \target_blend_y, \color
 	.endm
@@ -409,3 +449,9 @@
 	.macro shakebattleterrain priority=2, x_offset:req, y_offset:req, shakes:req, delay:req
 	createvisualtask AnimTask_ShakeBattleTerrain, \priority, \x_offset, \y_offset, \shakes, \delay
 	.endm
+
+@ fixed-point constructors
+@ Q8(n, d) means "n/d represented in a Q8", e.g. 'Q8(32, 10)' is a Q8
+@ repserentation of 32/10, aka 3.2.
+
+#define Q8(n, d) ((n * 256) / d)
