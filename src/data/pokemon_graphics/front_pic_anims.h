@@ -272,20 +272,25 @@ static const union AnimCmd sAnim_Arbok_1[] =
 
 static const union AnimCmd sAnim_Pikachu_1[] =
 {
-    ANIMCMD_FRAME(0, 15),
-    ANIMCMD_FRAME(1, 20),
-    ANIMCMD_FRAME(0, 15),
-    ANIMCMD_FRAME(1, 20),
-    ANIMCMD_FRAME(0, 15),
-    ANIMCMD_END,
-};
-
-static const union AnimCmd sAnim_Pikachu_2[] =
-{
-    ANIMCMD_FRAME(0, 20),
-    ANIMCMD_FRAME(2, 20),
-    ANIMCMD_FRAME(0, 20),
-    ANIMCMD_FRAME(2, 20),
+    ANIMCMD_FRAME(1, 3),
+    ANIMCMD_FRAME(2, 3),
+    ANIMCMD_FRAME(3, 3),
+    ANIMCMD_FRAME(2, 3),
+    ANIMCMD_FRAME(3, 3),
+    ANIMCMD_FRAME(2, 3),
+    ANIMCMD_FRAME(3, 3),
+    ANIMCMD_FRAME(2, 18),
+    ANIMCMD_FRAME(0, 3),
+    ANIMCMD_FRAME(4, 3),
+    ANIMCMD_FRAME(0, 3),
+    ANIMCMD_FRAME(4, 3),
+    ANIMCMD_FRAME(5, 3),
+    ANIMCMD_FRAME(4, 3),
+    ANIMCMD_FRAME(0, 3),
+    ANIMCMD_FRAME(4, 3),
+    ANIMCMD_FRAME(5, 3),
+    ANIMCMD_FRAME(4, 3),
+    ANIMCMD_FRAME(0, 3),
     ANIMCMD_END,
 };
 
@@ -4847,7 +4852,7 @@ SINGLE_ANIMATION(Spearow);
 SINGLE_ANIMATION(Fearow);
 SINGLE_ANIMATION(Ekans);
 SINGLE_ANIMATION(Arbok);
-DOUBLE_ANIMATION(Pikachu);
+SINGLE_ANIMATION(Pikachu);
 DOUBLE_ANIMATION(Raichu);
 DOUBLE_ANIMATION(Sandshrew);
 DOUBLE_ANIMATION(Sandslash);
